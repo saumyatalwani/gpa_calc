@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GPA Calculator</title>
+  <link href="index.css" rel="stylesheet">
+  <script>
+    // Function to calculate GPA
+    function calculateGPA() {
+      var subjects = document.querySelectorAll('.subject');
+      var totalCredits = 0;
+      var totalWeightedMarks = 0;
+
+      function getGrade(total) {
+        if (total >= 80) {
+          return 10.0;
+        } else if (total >= 70) {
+          return 9.0;
+        } else if (total >= 60) {
+          return 8.0;
+        } else if (total >= 55) {
+          return 7.0;
+        } else if (total >= 50) {
+          return 6.0;
+        } else if (total >= 45) {
+          return 5.0;
+        } else if (total >= 40) {
+          return 4.0;
+        } else {
+          return 0.0;
+        }
+      }
+
+      // Calculate the weighted marks and total credits for each subject
+      subjects.forEach(function (subject) {
+        var midsemMarks = parseFloat(subject.querySelector('.midsem').value);
+        var endsemMarks = parseFloat(subject.querySelector('.endsem').value);
+        var internalMarks = parseFloat(subject.querySelector('.internal').value);
+        var credits = parseFloat(subject.querySelector('.credits').value);
+        var totalMarks = midsemMarks / 2 + endsemMarks / 2 + internalMarks;
+        var grade = getGrade(totalMarks);
+
+        totalWeightedMarks += grade * credits;
+        totalCredits += credits;
+      });
+
+      // Calculate GPA
+      var gpa = totalWeightedMarks / totalCredits;
+
+      // Display the GPA
+      document.getElementById("result").innerHTML = "Your GPA is: " + gpa.toFixed(2);
+    }
+
+    // Function to add a new subject
+    function addSubject() {
+      var subjectContainer = document.getElementById('subjectContainer');
+      var subjectCount = subjectContainer.getElementsByClassName('subject').length + 1;
+
+      var subjectDiv = document.createElement('div');
+      subjectDiv.classList.add('subject');
+
+      subjectDiv.innerHTML =
+        '<h2>Subject ' + subjectCount + '</h2>' +
+        'Midsem Marks: <input type="number" class="midsem" value=0 step="0.5"><br>' +
+        'Endsem Marks: <input type="number" class="endsem" value=0 step="0.5"><br>' +
+        'Internal Marks: <input type="number" class="internal" value=0 step="0.5"><br>' +
+        'Credits: <input type="number" value=1 class="credits"><br>';
+
+      subjectContainer.appendChild(subjectDiv);
+
+      // Add event listener to new input fields
+      var inputs = subjectDiv.querySelectorAll('input[type="number"]');
+      inputs.forEach(function (input) {
+        input.addEventListener('input', calculateGPA);
+      });
+
+      
+    }
+
+    function addLabSubject() {
+      var subjectContainer = document.getElementById('subjectContainer');
+      var subjectCount = subjectContainer.getElementsByClassName('subject').length + 1;
+
+      var subjectDiv = document.createElement('div');
+      subjectDiv.classList.add('subject');
+
+      subjectDiv.innerHTML =
+        '<h2>Subject ' + subjectCount + '</h2>' +
+        'Marks: <input type="number" class="internal" value=0 step="0.5"><br>' +
+        'Credits: <input type="number" value=1 class="credits"><br>'+
+        '<input type="number" class="endsem hidden" value=0 step="0.5">' +
+        '<input type="number" class="midsem hidden" value=0 step="0.5">' ;
+
+      subjectContainer.appendChild(subjectDiv);
+
+      // Add event listener to new input fields
+      var inputs = subjectDiv.querySelectorAll('input[type="number"]');
+      inputs.forEach(function (input) {
+        input.addEventListener('input', calculateGPA);
+      });
+
+      
+    }
+
+  </script>
+</head>
+<body>
+  <h1>GPA Calculator</h1>
+
+  <div id="subjectContainer">
+    <!-- Initial subject -->
+    <div class="subject">
+      <h2>Subject 1</h2>
+      Midsem Marks: <input type="number" class="midsem" step="0.5"><br>
+      Endsem Marks: <input type="number" class="endsem" step="0.5"><br>
+      Internal Marks: <input type="number" class="internal" step="0.5"><br>
+      Credits: <input type="number" class="credits"><br>
+    </div>
+  </div>
+
+  <br>
+  <button onclick="addSubject()">Add Subject</button>
+  <button onclick="addLabSubject()">Add Lab Subject</button>
+
+  <br><br>
+  <p id="result"></p>
+
+  <script>
+    // Calculate GPA when input fields change
+    var inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(function (input) {
+      input.addEventListener('input', calculateGPA);
+    });
+  </script>
+</body>
+</html>
